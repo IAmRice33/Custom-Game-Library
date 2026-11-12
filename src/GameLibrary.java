@@ -17,4 +17,8 @@ public class GameLibrary {
     public GameLibrary() {
         library = new ArrayList<>();
     }
+
+    public void addGame(String gameName) {
+        library.add(gameName);
+    }
 }
