@@ -11,6 +11,7 @@ import java.util.ArrayList;
  * @since 1.0
  */
 public class GameLibrary {
+    // Use ArrayList<String> to dynamically store games
     private ArrayList<String> library;
 
     public GameLibrary() {
