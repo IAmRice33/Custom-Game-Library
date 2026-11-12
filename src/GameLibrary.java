@@ -21,4 +21,15 @@ public class GameLibrary {
     public void addGame(String gameName) {
         library.add(gameName);
     }
+
+    @Override 
+    public String toString() {
+        String gameList = "";
+
+        for (String gameName : library) {
+            gameList += gameName + " ";
+        }
+
+        return gameList;
+    }
 }
