@@ -9,6 +9,7 @@ public class Main {
         library.addGame("Game2");
         library.addGame("Game1");
         library.addGame("game2");
+        library.addGame(null);
 
         IO.println(library);
     }

@@ -27,7 +27,7 @@ public class GameLibrary {
      */
     public void addGame(String gameName) {
         if (gameName == null) {
-            IO.println("Game provided is null");
+            IO.println("Game provided is null.");
             return;
         }
 
