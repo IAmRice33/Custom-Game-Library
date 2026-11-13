@@ -19,7 +19,12 @@ public class GameLibrary {
     }
 
     public void addGame(String gameName) {
-        library.add(gameName);
+        if (library.contains(gameName)) {
+            IO.println(String.format("Failed to add %s: Game already exists.", gameName));
+        } else {
+            library.add(gameName);
+            IO.println(String.format("Successfully added %s.", gameName));
+        }
     }
 
     @Override 
