@@ -8,6 +8,7 @@ public class Main {
         library.addGame("Game3");
         library.addGame("Game2");
         library.addGame("Game1");
+        library.addGame("game2");
 
         IO.println(library);
     }

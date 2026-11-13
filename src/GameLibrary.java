@@ -18,13 +18,42 @@ public class GameLibrary {
         library = new ArrayList<>();
     }
 
+    /**
+     * Adds a game to the library.
+     * Prevents duplicate names and prints result to terminal.
+     * Rejects null values.
+     * 
+     * @param gameName
+     */
     public void addGame(String gameName) {
-        if (library.contains(gameName)) {
+        if (gameName == null) {
+            IO.println("Game provided is null");
+            return;
+        }
+
+        if (hasDuplicate(gameName)) {
             IO.println(String.format("Failed to add %s: Game already exists.", gameName));
         } else {
             library.add(gameName);
             IO.println(String.format("Successfully added %s.", gameName));
         }
+    }
+
+    /**
+     * Checks if the game already exists in the game library.
+     * Checks are case insensitive.
+     * 
+     * @param gameName
+     * @return if the game exists in library, case insensitive
+     */
+    private boolean hasDuplicate(String gameName) {
+        for (String game : library) {
+            // Compare both strings in lowercase to ignore case sensitivity
+            if (game.toLowerCase().equals(gameName.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override 
