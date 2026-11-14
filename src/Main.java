@@ -8,9 +8,10 @@ public class Main {
         library.addGame("Game2");
         library.addGame("Game1");
         library.addGame("game2");
-        library.removeGame("Game3");
+        library.removeGame("game3");
         library.addGame(null);
         library.removeGame("Game4");
+        library.removeGame(null);
 
         IO.println(library);
     }

@@ -27,7 +27,7 @@ public class GameLibrary {
      */
     public void addGame(String gameName) {
         if (gameName == null) {
-            IO.println("Game name provided is null.");
+            IO.println("Game name provided to add is null.");
             return;
         }
 
@@ -40,18 +40,22 @@ public class GameLibrary {
     }
 
     /**
-     * Removes the game from the library matching the provided name.
-     * Null values are rejected in case the game name is "null".
+     * Removes the game from the library matching the requested case insensitive name.
+     * Prints the result to the terminal and null values are rejected.
      * 
+     * @param gameName
      */
     public void removeGame(String gameName) {
         if (gameName == null) {
-            IO.println("Game name provided is null.");
+            IO.println("Game name provided for removal is null.");
             return;
         }
 
-        if (library.contains(gameName)) {
-            library.remove(gameName);
+        int index = gameIndex(gameName);
+
+        // Use index instead of passing the exact string to make removal case insensitive.
+        if (index != -1) {
+            library.remove(index);
             IO.println(String.format("Successfully removed %s from the library.", gameName));
         } else {
             IO.println(String.format("%s was not found in the library.", gameName));
@@ -59,13 +63,13 @@ public class GameLibrary {
     }
 
     /**
-     * Checks if the game already exists in the game library.
-     * Checks are case insensitive.
+     * Checks if the requested case insensitive game name already exists 
+     * in the game library.
      * Duplicate names are checked to prevent accidental replicating of names when 
      * the game library becomes large, and games with identical names are rare.
      * 
      * @param gameName
-     * @return if the game exists in library, case insensitive
+     * @return true if the game exists in library, case insensitive, false otherwise
      */
     private boolean hasDuplicate(String gameName) {
         for (String game : library) {
@@ -75,6 +79,27 @@ public class GameLibrary {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns the index of the first occurance of the requested game name
+     * in the game library, or -1 if there is no such game.
+     * Comparisons between library games and the requested name are case
+     * insensitive.
+     *  
+     * @param gameName
+     * @return the index of the first occurance of requested game, or -1
+     * if the game is not in the library
+     */
+    private int gameIndex(String gameName) {
+        for (int i = 0; i < library.size(); i++) {
+            // Compare both strings in lowercase to ignore case sensitivity
+            if (library.get(i).toLowerCase().equals(gameName.toLowerCase())) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     @Override 
