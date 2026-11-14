@@ -27,7 +27,7 @@ public class GameLibrary {
      */
     public void addGame(String gameName) {
         if (gameName == null) {
-            IO.println("Game provided is null.");
+            IO.println("Game name provided is null.");
             return;
         }
 
@@ -40,8 +40,29 @@ public class GameLibrary {
     }
 
     /**
+     * Removes the game from the library matching the provided name.
+     * Null values are rejected in case the game name is "null".
+     * 
+     */
+    public void removeGame(String gameName) {
+        if (gameName == null) {
+            IO.println("Game name provided is null.");
+            return;
+        }
+
+        if (library.contains(gameName)) {
+            library.remove(gameName);
+            IO.println(String.format("Successfully removed %s from the library.", gameName));
+        } else {
+            IO.println(String.format("%s was not found in the library.", gameName));
+        }
+    }
+
+    /**
      * Checks if the game already exists in the game library.
      * Checks are case insensitive.
+     * Duplicate names are checked to prevent accidental replicating of names when 
+     * the game library becomes large, and games with identical names are rare.
      * 
      * @param gameName
      * @return if the game exists in library, case insensitive
