@@ -5,6 +5,7 @@ public class Main {
 
         library.addGame("Game1");
         library.addGame("Game3");
+        library.addGame("Game5");
         library.addGame("Game2");
         library.addGame("Game1");
         library.addGame("game2");
@@ -12,7 +13,7 @@ public class Main {
         library.addGame(null);
         library.removeGame("Game4");
         library.removeGame(null);
-
-        IO.println(library);
+        
+        library.displayLibrary();
     }
 }

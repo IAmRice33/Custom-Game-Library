@@ -63,6 +63,25 @@ public class GameLibrary {
     }
 
     /**
+     * Displays the full contents of the game library to the terminal
+     * numbered in the order that each game occurs in the library.
+     * Each game is printed on a new line.
+     */
+    public void displayLibrary() {
+        // Create a separator on both ends to make output clear
+        // Format a title at the top, and use left and right justified widths to ensure spacing
+        IO.println(String.format("%-20s%s%20s", "-".repeat(19), "Game Library", "-".repeat(19)));
+
+        for (int i = 0; i < library.size(); i++) {
+            // Print each game name on a new line and number it based on position in library
+            IO.println(String.format("%d. %s", (i + 1), library.get(i)));
+        }
+
+        // Bottom separator
+        IO.println(String.format("%52s", "-".repeat(52)));
+    }
+
+    /**
      * Checks if the requested case insensitive game name already exists 
      * in the game library.
      * Duplicate names are checked to prevent accidental replicating of names when 
