@@ -58,5 +58,8 @@ public class Main {
         library.displayLibrary(3, 6);
         
         library.displayLibrary();
+
+        library.saveLibrary();
+        library.saveLibrary("/test/OtherLibrary.txt");
     }
 }

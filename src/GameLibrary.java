@@ -1,3 +1,9 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
@@ -12,7 +18,9 @@ import java.util.ArrayList;
  */
 public class GameLibrary {
     // Use ArrayList<String> to dynamically store games
-    private ArrayList<String> library;
+    private final ArrayList<String> library;
+    // This is the default path to save the data to.
+    private final String defaultSavePath = "/data/GameLibrary.data";
 
     public GameLibrary() {
         library = new ArrayList<>();
@@ -113,6 +121,54 @@ public class GameLibrary {
         }
 
         IO.println(String.format("%52s", "-".repeat(52)));
+    }
+
+    /**
+     * Create a {@code .txt} file at the supplied file path and save
+     * the game library's data in this file. This method exists if the user 
+     * wants to use a custom file path.
+     * 
+     * @param filePath the file path to save the game library's data at
+     */
+    public void saveLibrary(String filePath) {
+        // Create a new file using the path from the project root rather than src.
+        // Use relative paths to keep the project portable.
+        Path path = Path.of("..", filePath);
+        try {
+            // Create the parent directory first if it does exist
+            if (path.getParent() != null) {
+                Files.createDirectories(path.getParent());
+            }
+        } catch (IOException e) {
+            IO.println("Could not create directory: " + e.getMessage());
+        }
+
+        try {
+            Files.createFile(path);
+        } catch (FileAlreadyExistsException e) {
+            // Keep the output simple as this is not an actual error
+            IO.println(String.format("File %s exists", filePath));
+        } catch (IOException e) {
+            IO.println(String.format("Could not create file %s: %s", filePath, e.getMessage()));
+        }
+
+        try (PrintWriter writer = new PrintWriter("../" + filePath)) {
+            for (String game : library) {
+                writer.println(game);
+            }
+        } catch (FileNotFoundException e) {
+            IO.println(String.format("Could not find file %s.", filePath));
+        }
+    }
+
+    /**
+     * Saves the game library's data to the default save file path
+     * of {@code /data/GameLibrary.txt} from the root directory.
+     * 
+     * @see #saveLibrary(String)
+     */
+    public void saveLibrary() {
+        saveLibrary(defaultSavePath);
     }
 
     /**
