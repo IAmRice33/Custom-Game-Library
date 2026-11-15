@@ -83,7 +83,7 @@ public class GameLibrary {
 
     /**
      * Displays game library contents from the start index (1-indexed) inclusize 
-     * to the end index exclusive according to the {@link #displayLibrary()} format.
+     * to the end index inclusive according to the {@link #displayLibrary()} format.
      * @see #displayLibrary()
      * 
      * @param start the starting index, must exist between 1 and the library size - 1 inclusive
@@ -92,7 +92,6 @@ public class GameLibrary {
      * @throws IndexOutOfBoundsException
      */
     public void displayLibrary(int start, int end) throws IndexOutOfBoundsException {
-        // Check index bounds
         if (start < 1) {
             throw new IndexOutOfBoundsException("Library begins at index 1");
         }
@@ -107,8 +106,9 @@ public class GameLibrary {
 
         IO.println(String.format("%-20s%s%20s", "-".repeat(19), "Game Library", "-".repeat(19)));
 
+        // Use 1-index to align user input of start and end with the displayed numbers
+        // next to the games. Start at start - 1 as number printed is i + 1.
         for (int i = start - 1; i < end; i++) {
-            // Print each game name on a new line and number it based on position in library
             IO.println(String.format("%d. %s", (i + 1), library.get(i)));
         }
 

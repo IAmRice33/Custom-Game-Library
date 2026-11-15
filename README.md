@@ -11,7 +11,7 @@ create a game library that can help me track these games and remind me of games 
 ## How It Will Work (MVP)
 
 - [x] Add and remove games from the library
-- [ ] Display all games in the library
+- [x] Display all games in the library
 - [ ] Save and load the game library from a `.txt` file
 - [ ] Implement dynamic user input to control program execution
 
