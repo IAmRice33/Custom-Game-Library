@@ -12,7 +12,7 @@ create a game library that can help me track these games and remind me of games 
 
 - [x] Add and remove games from the library
 - [x] Display all games in the library
-- [ ] Save and load the game library from a `.txt` file
+- [x] Save and load the game library from a `.txt` file
 - [ ] Implement dynamic user input to control program execution
 
 ![System Diagram](docs/Custom%20Game%20Library%20System%20Diagram.drawio.png)
@@ -25,7 +25,6 @@ create a game library that can help me track these games and remind me of games 
   - java.io.BufferedReader
   - java.io.FileReader
   - java.io.PrintWriter
-  - java.io.FileWriter
   - java.io.IOException
   - java.lang.IO
   - java.nio.file
