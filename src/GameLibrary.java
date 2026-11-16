@@ -23,7 +23,7 @@ public class GameLibrary {
     // Use ArrayList<String> to dynamically store games.
     private final ArrayList<String> library;
     // This is the default path to save the data to.
-    private final String defaultSavePath = "/data/GameLibrary.data";
+    private static final String DEFAULT_SAVE_PATH = "/data/GameLibrary.txt";
 
     public GameLibrary() {
         library = new ArrayList<>();
@@ -75,8 +75,8 @@ public class GameLibrary {
 
     /**
      * Displays game library contents from the start index (1-indexed) inclusize 
-     * to the end index inclusive according to the {@link #displayLibrary()} format.
-     * @see #displayLibrary()
+     * to the end index inclusive to the terminal numbered in the order that each
+     * game occurs in the library. Each game is printed on a new line.
      * 
      * @param start the starting index, must exist between 1 and the library size - 1 inclusive
      * @param end the ending index, must exist between {@code start + 1} 
@@ -118,9 +118,7 @@ public class GameLibrary {
     }
 
     /**
-     * Displays the full contents of the game library to the terminal
-     * numbered in the order that each game occurs in the library.
-     * Each game is printed on a new line.
+     * Displays the full contents of the game library.
      * 
      * @see #displayLibrary(int, int)
      */
@@ -129,9 +127,8 @@ public class GameLibrary {
     }
 
     /**
-     * Create a {@code .txt} file at the supplied file path and save
-     * the game library's data in this file. This method exists if the user 
-     * wants to use a custom file path.
+     * Create a file at the supplied file path and save the game library's data 
+     * in this file. This method exists if the user wants to use a custom file path.
      * 
      * @param filePath the file path to save the game library's data at
      */
@@ -178,18 +175,17 @@ public class GameLibrary {
 
     /**
      * Saves the game library's data to the default save file path
-     * of {@code /data/GameLibrary.txt} from the root directory.
+     * of {@value #DEFAULT_SAVE_PATH} from the root directory.
      * 
      * @see #saveLibrary(String)
      */
     public void saveLibrary() {
-        saveLibrary(defaultSavePath);
+        saveLibrary(DEFAULT_SAVE_PATH);
     }
 
     /**
-     * Loads game library data from the {@code .txt} file from the
-     * supplied file path. This method exists if the user decides to
-     * load data from a custom file path.
+     * Loads game library data from the supplied file path. 
+     * This method exists if the user decides to load data from a custom file path.
      * 
      * @param filePath the file path to load data from
      */
@@ -210,12 +206,12 @@ public class GameLibrary {
 
     /**
      * Loads the game library's data from the default save file path
-     * of {@code /data/GameLibrary.txt} from the root directory.
+     * of {@value #DEFAULT_SAVE_PATH} from the root directory.
      * 
      * @see #loadLibrary(String)
      */
     public void loadLibrary() {
-        loadLibrary(defaultSavePath);
+        loadLibrary(DEFAULT_SAVE_PATH);
     }
 
     /**
@@ -270,10 +266,10 @@ public class GameLibrary {
             "to the end index (default is the entire library)."
         );
         IO.println(String.format("Save opt.{filepath}: Saves the library in the given filepath " +
-            "(default saves to %s), overwrites the file.", defaultSavePath)
+            "(default saves to %s), overwrites the file.", DEFAULT_SAVE_PATH)
         );
         IO.println(String.format("Load opt.{filepath}: Loads the library from the given filepath " +
-            "(default loads from %s), overwrites the library.", defaultSavePath)
+            "(default loads from %s), overwrites the library.", DEFAULT_SAVE_PATH)
         );
         IO.println("Exit: Quit the program.");
     }
