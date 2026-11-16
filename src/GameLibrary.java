@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
@@ -134,7 +135,14 @@ public class GameLibrary {
     public void saveLibrary(String filePath) {
         // Create a new file using the path from the project root rather than src.
         // Use relative paths to keep the project portable.
-        Path path = Path.of("..", filePath);
+        Path path;
+        try {
+            path = Path.of("..", filePath);
+        } catch (InvalidPathException e) {
+            IO.println("Could not convert path string to a file path");
+            return;
+        }
+        
         try {
             // Create the parent directory first if it does exist.
             if (path.getParent() != null) {
@@ -146,6 +154,7 @@ public class GameLibrary {
 
         try {
             Files.createFile(path);
+            IO.println(String.format("Created %s", filePath));
         } catch (FileAlreadyExistsException e) {
             // Keep the output simple as this is not an actual error.
             IO.println(String.format("File %s exists", filePath));
@@ -243,6 +252,109 @@ public class GameLibrary {
         }
 
         return -1;
+    }
+
+    /**
+     * Handles a {@code String[]} of arbitrary length and maps it
+     * to a known command. If the command is not able to be found,
+     * prints "Unknown command." to the terminal.
+     * 
+     * @apiNote This method is currently public for testing. It will be
+     * set to private when the full dynamic user input system is implemented.
+     * 
+     * @param command an array of command arguments 
+     */
+    public void handleCommand(String... command) {
+        // Use the first word as the main command
+        switch (command[0]) {
+            case "Add" -> {
+                if (command.length == 1) {
+                    IO.println("Please specify games to add.");
+                }
+
+                for (int i = 1; i < command.length; i++) {
+                    addGame(command[i]);
+                }
+            }
+            case "Remove" -> {
+                if (command.length == 1) {
+                    IO.println("Please specify games to remove.");
+                }
+                
+                for (int i = 1; i < command.length; i++) {
+                    removeGame(command[i]);
+                }
+            }
+            case "Check" -> {
+                if (command.length == 1) {
+                    IO.println("Please specify games to check for.");
+                }
+
+                for (int i = 1; i < command.length; i++) {
+                    IO.println(
+                        hasDuplicate(command[i]) ? 
+                            String.format("%s found.", command[i]) : String.format("%s not found.", command[i])
+                    );
+                }
+            }
+            case "Find" -> {
+                if (command.length == 1) {
+                    IO.println("Please specify games to find.");
+                }
+
+                int index;
+                for (int i = 1; i < command.length; i++) {
+                    IO.println(
+                        (index = gameIndex(command[i])) != -1 ?
+                            String.format("%s found at index %d.", command[i], index)
+                                : String.format("%s not found.", command[i])
+                    );
+                }
+            }
+            case "Display" -> {
+                switch (command.length) {
+                    case 1 -> displayLibrary();
+                    case 3 -> {
+                        try {
+                            int start = Integer.parseInt(command[1]);
+                            int end = Integer.parseInt(command[2]);
+                            displayLibrary(start, end);
+                        } catch (NumberFormatException e) {
+                            IO.println("Invalid index format, please provide integers.");
+                        }
+                    }
+                    default -> IO.println("Unknown command");
+                    // TODO: Remind user of commands
+                }
+            }
+            case "Save" -> {
+                switch (command.length) {
+                    case 1 -> saveLibrary();
+                    case 2 -> saveLibrary(command[1]);
+                    default -> {
+                        IO.println("Unknown command.");
+                        // TODO: Remind user of commands
+                    }
+                }
+            }
+            case "Load" -> {
+                switch (command.length) {
+                    case 1 -> loadLibrary();
+                    case 2 -> loadLibrary(command[1]);
+                    default -> {
+                        IO.println("Unknown command.");
+                        // TODO: Remind user of commands
+                    }
+                }
+            }
+            case "Exit" -> {
+                // TODO: Implement boolean to exit loop
+            }
+            default -> {
+                IO.println("Unknown command.");
+                // TODO: Remind user of commands
+            }
+        }
     }
 
     @Override 
