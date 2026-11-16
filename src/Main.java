@@ -58,5 +58,16 @@ public class Main {
         library.displayLibrary(3, 6);
         
         library.displayLibrary();
+
+        library.saveLibrary();
+
+        library.loadLibrary();
+        library.displayLibrary();
+
+        library.loadLibrary("/test/OtherLibrary.txt");
+        library.displayLibrary();
+
+        library.loadLibrary("/badtest/OtherLibrary.txt");
+        library.displayLibrary();
     }
 }
