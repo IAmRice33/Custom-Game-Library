@@ -22,7 +22,7 @@ public class GameLibrary {
     // Use ArrayList<String> to dynamically store games.
     private final ArrayList<String> library;
     // This is the default path to save the data to.
-    private final String defaultSavePath = "/data/GameLibrary.data";
+    private static final String DEFAULT_SAVE_PATH = "/data/GameLibrary.txt";
 
     public GameLibrary() {
         library = new ArrayList<>();
@@ -73,28 +73,9 @@ public class GameLibrary {
     }
 
     /**
-     * Displays the full contents of the game library to the terminal
-     * numbered in the order that each game occurs in the library.
-     * Each game is printed on a new line.
-     */
-    public void displayLibrary() {
-        // Create a separator on both ends to make output clear.
-        // Format a title at the top, and use left and right justified widths to ensure spacing.
-        IO.println(String.format("%-20s%s%20s", "-".repeat(19), "Game Library", "-".repeat(19)));
-
-        for (int i = 0; i < library.size(); i++) {
-            // Print each game name on a new line and number it based on position in library.
-            IO.println(String.format("%d. %s", (i + 1), library.get(i)));
-        }
-
-        // Bottom separator
-        IO.println(String.format("%52s", "-".repeat(52)));
-    }
-
-    /**
      * Displays game library contents from the start index (1-indexed) inclusize 
-     * to the end index inclusive according to the {@link #displayLibrary()} format.
-     * @see #displayLibrary()
+     * to the end index inclusive to the terminal numbered in the order that each
+     * game occurs in the library. Each game is printed on a new line.
      * 
      * @param start the starting index, must exist between 1 and the library size - 1 inclusive
      * @param end the ending index, must exist between {@code start + 1} 
@@ -102,6 +83,12 @@ public class GameLibrary {
      * @throws IndexOutOfBoundsException
      */
     public void displayLibrary(int start, int end) throws IndexOutOfBoundsException {
+        // Check first to prevent throwing an exception on an empty library;
+        if (library.isEmpty()) {
+            IO.println("Game library is empty.");
+            return;
+        }
+
         if (start < 1) {
             throw new IndexOutOfBoundsException("Library begins at index 1");
         }
@@ -114,21 +101,33 @@ public class GameLibrary {
             throw new IndexOutOfBoundsException(String.format("Game library has size %d", library.size()));
         }
 
+        // Create a separator on both ends to make output clear.
+        // Format a title at the top, and use left and right justified widths to ensure spacing.
         IO.println(String.format("%-20s%s%20s", "-".repeat(19), "Game Library", "-".repeat(19)));
 
+        // Print each game name on a new line and number it based on position in library.
         // Use 1-index to align user input of start and end with the displayed numbers
         // next to the games. Start at start - 1 as number printed is i + 1.
         for (int i = start - 1; i < end; i++) {
             IO.println(String.format("%d. %s", (i + 1), library.get(i)));
         }
 
+        // Bottom separator
         IO.println(String.format("%52s", "-".repeat(52)));
     }
 
     /**
-     * Create a {@code .txt} file at the supplied file path and save
-     * the game library's data in this file. This method exists if the user 
-     * wants to use a custom file path.
+     * Displays the full contents of the game library.
+     * 
+     * @see #displayLibrary(int, int)
+     */
+    public void displayLibrary() {
+        displayLibrary(1, library.size());
+    }
+
+    /**
+     * Create a file at the supplied file path and save the game library's data 
+     * in this file. This method exists if the user wants to use a custom file path.
      * 
      * @param filePath the file path to save the game library's data at
      */
@@ -167,18 +166,17 @@ public class GameLibrary {
 
     /**
      * Saves the game library's data to the default save file path
-     * of {@code /data/GameLibrary.txt} from the root directory.
+     * of {@value #DEFAULT_SAVE_PATH} from the root directory.
      * 
      * @see #saveLibrary(String)
      */
     public void saveLibrary() {
-        saveLibrary(defaultSavePath);
+        saveLibrary(DEFAULT_SAVE_PATH);
     }
 
     /**
-     * Loads game library data from the {@code .txt} file from the
-     * supplied file path. This method exists if the user decides to
-     * load data from a custom file path.
+     * Loads game library data from the supplied file path. 
+     * This method exists if the user decides to load data from a custom file path.
      * 
      * @param filePath the file path to load data from
      */
@@ -199,12 +197,12 @@ public class GameLibrary {
 
     /**
      * Loads the game library's data from the default save file path
-     * of {@code /data/GameLibrary.txt} from the root directory.
+     * of {@value #DEFAULT_SAVE_PATH} from the root directory.
      * 
      * @see #loadLibrary(String)
      */
     public void loadLibrary() {
-        loadLibrary(defaultSavePath);
+        loadLibrary(DEFAULT_SAVE_PATH);
     }
 
     /**
