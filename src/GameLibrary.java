@@ -73,25 +73,6 @@ public class GameLibrary {
     }
 
     /**
-     * Displays the full contents of the game library to the terminal
-     * numbered in the order that each game occurs in the library.
-     * Each game is printed on a new line.
-     */
-    public void displayLibrary() {
-        // Create a separator on both ends to make output clear.
-        // Format a title at the top, and use left and right justified widths to ensure spacing.
-        IO.println(String.format("%-20s%s%20s", "-".repeat(19), "Game Library", "-".repeat(19)));
-
-        for (int i = 0; i < library.size(); i++) {
-            // Print each game name on a new line and number it based on position in library.
-            IO.println(String.format("%d. %s", (i + 1), library.get(i)));
-        }
-
-        // Bottom separator
-        IO.println(String.format("%52s", "-".repeat(52)));
-    }
-
-    /**
      * Displays game library contents from the start index (1-indexed) inclusize 
      * to the end index inclusive according to the {@link #displayLibrary()} format.
      * @see #displayLibrary()
@@ -102,6 +83,12 @@ public class GameLibrary {
      * @throws IndexOutOfBoundsException
      */
     public void displayLibrary(int start, int end) throws IndexOutOfBoundsException {
+        // Check first to prevent throwing an exception on an empty library;
+        if (library.isEmpty()) {
+            IO.println("Game library is empty.");
+            return;
+        }
+
         if (start < 1) {
             throw new IndexOutOfBoundsException("Library begins at index 1");
         }
@@ -114,15 +101,30 @@ public class GameLibrary {
             throw new IndexOutOfBoundsException(String.format("Game library has size %d", library.size()));
         }
 
+        // Create a separator on both ends to make output clear.
+        // Format a title at the top, and use left and right justified widths to ensure spacing.
         IO.println(String.format("%-20s%s%20s", "-".repeat(19), "Game Library", "-".repeat(19)));
 
+        // Print each game name on a new line and number it based on position in library.
         // Use 1-index to align user input of start and end with the displayed numbers
         // next to the games. Start at start - 1 as number printed is i + 1.
         for (int i = start - 1; i < end; i++) {
             IO.println(String.format("%d. %s", (i + 1), library.get(i)));
         }
 
+        // Bottom separator
         IO.println(String.format("%52s", "-".repeat(52)));
+    }
+
+    /**
+     * Displays the full contents of the game library to the terminal
+     * numbered in the order that each game occurs in the library.
+     * Each game is printed on a new line.
+     * 
+     * @see #displayLibrary(int, int)
+     */
+    public void displayLibrary() {
+        displayLibrary(1, library.size());
     }
 
     /**
