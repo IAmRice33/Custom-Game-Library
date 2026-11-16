@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * @since 1.0
  */
 public class GameLibrary {
-    // Use ArrayList<String> to dynamically store games
+    // Use ArrayList<String> to dynamically store games.
     private final ArrayList<String> library;
     // This is the default path to save the data to.
     private final String defaultSavePath = "/data/GameLibrary.data";
@@ -78,12 +78,12 @@ public class GameLibrary {
      * Each game is printed on a new line.
      */
     public void displayLibrary() {
-        // Create a separator on both ends to make output clear
-        // Format a title at the top, and use left and right justified widths to ensure spacing
+        // Create a separator on both ends to make output clear.
+        // Format a title at the top, and use left and right justified widths to ensure spacing.
         IO.println(String.format("%-20s%s%20s", "-".repeat(19), "Game Library", "-".repeat(19)));
 
         for (int i = 0; i < library.size(); i++) {
-            // Print each game name on a new line and number it based on position in library
+            // Print each game name on a new line and number it based on position in library.
             IO.println(String.format("%d. %s", (i + 1), library.get(i)));
         }
 
@@ -137,7 +137,7 @@ public class GameLibrary {
         // Use relative paths to keep the project portable.
         Path path = Path.of("..", filePath);
         try {
-            // Create the parent directory first if it does exist
+            // Create the parent directory first if it does exist.
             if (path.getParent() != null) {
                 Files.createDirectories(path.getParent());
             }
@@ -148,7 +148,7 @@ public class GameLibrary {
         try {
             Files.createFile(path);
         } catch (FileAlreadyExistsException e) {
-            // Keep the output simple as this is not an actual error
+            // Keep the output simple as this is not an actual error.
             IO.println(String.format("File %s exists", filePath));
         } catch (IOException e) {
             IO.println(String.format("Could not create file %s: %s", filePath, e.getMessage()));
@@ -183,10 +183,13 @@ public class GameLibrary {
      * @param filePath the file path to load data from
      */
     public void loadLibrary(String filePath) {
+        // Empty the library to keep game libraries unique.
+        library.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader("../" + filePath))) {
             String game;
             while ((game = reader.readLine()) != null) {
-                library.add(game);
+                // Use addGame to uphold the game library's rules.
+                addGame(game);
             }
             IO.println("Load Complete.");
         } catch (IOException e) {
@@ -215,7 +218,7 @@ public class GameLibrary {
      */
     private boolean hasDuplicate(String gameName) {
         for (String game : library) {
-            // Compare both strings in lowercase to ignore case sensitivity
+            // Compare both strings in lowercase to ignore case sensitivity.
             if (game.toLowerCase().equals(gameName.toLowerCase())) {
                 return true;
             }
@@ -235,7 +238,7 @@ public class GameLibrary {
      */
     private int gameIndex(String gameName) {
         for (int i = 0; i < library.size(); i++) {
-            // Compare both strings in lowercase to ignore case sensitivity
+            // Compare both strings in lowercase to ignore case sensitivity.
             if (library.get(i).toLowerCase().equals(gameName.toLowerCase())) {
                 return i;
             }
