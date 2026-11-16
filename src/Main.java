@@ -70,5 +70,6 @@ public class Main {
         library.handleCommand("Load", "/badtest/OtherLibrary.txt");
         library.handleCommand("Load", "Anot.her Bad|test");
         library.displayLibrary();
+        library.printCommands();
     }
 }
