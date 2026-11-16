@@ -256,6 +256,26 @@ public class GameLibrary {
         return -1;
     }
 
+    public void printCommands() {
+        IO.println("List of Available Commands");
+        IO.println("Please keep all arguments space separated and case sensitive.");
+        IO.println("Add {Game1 Game2 ...}: Adds listed games to the library");
+        IO.println("Remove {Game1 Game2 ...}: Removes listed games from the library");
+        IO.println("Check {Game1 Game2 ...}: Checks for listed games in the library");
+        IO.println("Find {Game1 Game2 ...}: Finds the index of the listed games in the library");
+        IO.println(
+            "Display opt.{start end}: Displays the library from the start index " + 
+            "to the end index (default is the entire library)."
+        );
+        IO.println(String.format("Save opt.{filepath}: Saves the library in the given filepath " +
+            "(default saves to %s), overwrites the file.", defaultSavePath)
+        );
+        IO.println(String.format("Load opt.{filepath}: Loads the library from the given filepath " +
+            "(default loads from %s), overwrites the library.", defaultSavePath)
+        );
+        IO.println("Exit: Quit the program.");
+    }
+
     /**
      * Handles a {@code String[]} of arbitrary length and maps it
      * to a known command. If the command is not able to be found,
