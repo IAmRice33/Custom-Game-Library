@@ -1,4 +1,6 @@
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.FileAlreadyExistsException;
@@ -156,6 +158,8 @@ public class GameLibrary {
             for (String game : library) {
                 writer.println(game);
             }
+            writer.flush();
+            IO.println("Save complete.");
         } catch (FileNotFoundException e) {
             IO.println(String.format("Could not find file %s.", filePath));
         }
@@ -169,6 +173,35 @@ public class GameLibrary {
      */
     public void saveLibrary() {
         saveLibrary(defaultSavePath);
+    }
+
+    /**
+     * Loads game library data from the {@code .txt} file from the
+     * supplied file path. This method exists if the user decides to
+     * load data from a custom file path.
+     * 
+     * @param filePath the file path to load data from
+     */
+    public void loadLibrary(String filePath) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("../" + filePath))) {
+            String game;
+            while ((game = reader.readLine()) != null) {
+                library.add(game);
+            }
+            IO.println("Load Complete.");
+        } catch (IOException e) {
+            IO.println("Could not load from file: " + filePath);
+        }
+    }
+
+    /**
+     * Loads the game library's data from the default save file path
+     * of {@code /data/GameLibrary.txt} from the root directory.
+     * 
+     * @see #loadLibrary(String)
+     */
+    public void loadLibrary() {
+        loadLibrary(defaultSavePath);
     }
 
     /**

@@ -61,5 +61,15 @@ public class Main {
 
         library.saveLibrary();
         library.saveLibrary("/test/OtherLibrary.txt");
+
+        library = new GameLibrary();
+        library.displayLibrary();
+        library.loadLibrary();
+        library.displayLibrary();
+
+        library = new GameLibrary();
+        library.displayLibrary();
+        library.loadLibrary("/test/OtherLibrary.txt");
+        library.displayLibrary();
     }
 }
