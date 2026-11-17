@@ -71,5 +71,6 @@ public class Main {
         library.handleCommand("Load", "Anot.her Bad|test");
         library.displayLibrary();
         library.printCommands();
+        library.handleCommand(library.handleUserInput());
     }
 }

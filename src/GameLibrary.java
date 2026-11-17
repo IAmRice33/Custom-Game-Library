@@ -200,7 +200,7 @@ public class GameLibrary {
             }
             IO.println("Load Complete.");
         } catch (IOException e) {
-            IO.println("Could not load from file: " + filePath);
+            IO.println("Could not load from file: " + filePath + ". File may not exist.");
         }
     }
 
@@ -275,6 +275,16 @@ public class GameLibrary {
             "(no additional argument loads from %s), overwrites the library.", DEFAULT_SAVE_PATH)
         );
         IO.println("Exit: Quit the program.");
+    }
+    
+    /**
+     * Takes space seperated user input from the terminal and returns
+     * each word as an element in a single String array.
+     * 
+     * @return array of Strings of space-separated terminal input
+     */
+    public String[] handleUserInput() {
+        return IO.readln().split(" ");
     }
 
     /**
