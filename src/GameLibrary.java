@@ -24,9 +24,11 @@ public class GameLibrary {
     private final ArrayList<String> library;
     // This is the default path to save the data to.
     private static final String DEFAULT_SAVE_PATH = "/data/GameLibrary.txt";
+    private boolean running;
 
     public GameLibrary() {
         library = new ArrayList<>();
+        running = false;
     }
 
     /**
@@ -214,6 +216,19 @@ public class GameLibrary {
         loadLibrary(DEFAULT_SAVE_PATH);
     }
 
+    public void manageLibrary() {
+        running = true;
+
+        IO.println("Starting management of the game library.");
+        printCommands();
+        while (running) {
+            // Handle future command printing through handleCommand()
+            // to prevent flooding terminal while managing the game library.
+            handleCommand(handleUserInput());
+        }
+        IO.println();
+    }
+
     /**
      * Checks if the requested case insensitive game name already exists 
      * in the game library.
@@ -255,9 +270,9 @@ public class GameLibrary {
     }
     
     /**
-     * Prints a list of commands and their arguments to the terminal.
+     * Prints a list of game library commands and their arguments to the terminal.
      */
-    public void printCommands() {
+    private void printCommands() {
         IO.println("List of Available Commands");
         IO.println("Please keep all arguments space separated and case sensitive.");
         IO.println("Add {Game1 Game2 ...}: Adds listed games to the library");
@@ -283,7 +298,7 @@ public class GameLibrary {
      * 
      * @return array of Strings of space-separated terminal input
      */
-    public String[] handleUserInput() {
+    private String[] handleUserInput() {
         return IO.readln().split(" ");
     }
 
@@ -291,13 +306,12 @@ public class GameLibrary {
      * Handles a {@code String[]} of arbitrary length and maps it
      * to a known command. If the command is not able to be found,
      * prints "Unknown command." to the terminal.
-     * 
-     * @apiNote This method is currently public for testing. It will be
-     * set to private when the full dynamic user input system is implemented.
+     * The first element is the command, and all other elements
+     * are treated as arguments.
      * 
      * @param command an array of command arguments 
      */
-    public void handleCommand(String... command) {
+    private void handleCommand(String... command) {
         // Use the first word as the main command
         switch (command[0]) {
             case "Add" -> {
@@ -356,8 +370,10 @@ public class GameLibrary {
                             IO.println("Invalid index format, please provide integers.");
                         }
                     }
-                    default -> IO.println("Unknown command");
-                    // TODO: Remind user of commands
+                    default -> {
+                        IO.println("Unknown command");
+                        printCommands();
+                    }
                 }
             }
             case "Save" -> {
@@ -366,7 +382,7 @@ public class GameLibrary {
                     case 2 -> saveLibrary(command[1]);
                     default -> {
                         IO.println("Unknown command.");
-                        // TODO: Remind user of commands
+                        printCommands();
                     }
                 }
             }
@@ -376,16 +392,16 @@ public class GameLibrary {
                     case 2 -> loadLibrary(command[1]);
                     default -> {
                         IO.println("Unknown command.");
-                        // TODO: Remind user of commands
+                        printCommands();
                     }
                 }
             }
             case "Exit" -> {
-                // TODO: Implement boolean to exit loop
+                running = false;
             }
             default -> {
                 IO.println("Unknown command.");
-                // TODO: Remind user of commands
+                printCommands();
             }
         }
     }
