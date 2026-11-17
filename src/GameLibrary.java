@@ -274,7 +274,7 @@ public class GameLibrary {
      */
     private void printCommands() {
         IO.println("List of Available Commands");
-        IO.println("Please keep all arguments space separated and case sensitive.");
+        IO.println("Please keep all arguments separated by a single space and case sensitive.");
         IO.println("Add {Game1 Game2 ...}: Adds listed games to the library");
         IO.println("Remove {Game1 Game2 ...}: Removes listed games from the library");
         IO.println("Check {Game1 Game2 ...}: Checks for listed games in the library");
@@ -312,6 +312,14 @@ public class GameLibrary {
      * @param command an array of command arguments 
      */
     private void handleCommand(String... command) {
+        // Prevent inconsistent functionality due to multiple consecutive spaces
+        for (String argument : command) {
+            if (argument.equals("")) {
+                IO.println("Please keep spacing between arguments to one space");
+                return;
+            }
+        }
+
         // Use the first word as the main command
         switch (command[0]) {
             case "Add" -> {
