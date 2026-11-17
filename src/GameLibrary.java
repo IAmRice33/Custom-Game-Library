@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
@@ -23,9 +24,11 @@ public class GameLibrary {
     private final ArrayList<String> library;
     // This is the default path to save the data to.
     private static final String DEFAULT_SAVE_PATH = "/data/GameLibrary.txt";
+    private boolean running;
 
     public GameLibrary() {
         library = new ArrayList<>();
+        running = false;
     }
 
     /**
@@ -134,7 +137,14 @@ public class GameLibrary {
     public void saveLibrary(String filePath) {
         // Create a new file using the path from the project root rather than src.
         // Use relative paths to keep the project portable.
-        Path path = Path.of("..", filePath);
+        Path path;
+        try {
+            path = Path.of("..", filePath);
+        } catch (InvalidPathException e) {
+            IO.println("Could not convert path string to a file path");
+            return;
+        }
+        
         try {
             // Create the parent directory first if it does exist.
             if (path.getParent() != null) {
@@ -146,6 +156,7 @@ public class GameLibrary {
 
         try {
             Files.createFile(path);
+            IO.println(String.format("Created %s", filePath));
         } catch (FileAlreadyExistsException e) {
             // Keep the output simple as this is not an actual error.
             IO.println(String.format("File %s exists", filePath));
@@ -191,7 +202,7 @@ public class GameLibrary {
             }
             IO.println("Load Complete.");
         } catch (IOException e) {
-            IO.println("Could not load from file: " + filePath);
+            IO.println("Could not load from file: " + filePath + ". File may not exist.");
         }
     }
 
@@ -203,6 +214,19 @@ public class GameLibrary {
      */
     public void loadLibrary() {
         loadLibrary(DEFAULT_SAVE_PATH);
+    }
+
+    public void manageLibrary() {
+        running = true;
+
+        IO.println("Starting management of the game library.");
+        printCommands();
+        while (running) {
+            // Handle future command printing through handleCommand()
+            // to prevent flooding terminal while managing the game library.
+            handleCommand(handleUserInput());
+        }
+        IO.println();
     }
 
     /**
@@ -243,6 +267,143 @@ public class GameLibrary {
         }
 
         return -1;
+    }
+    
+    /**
+     * Prints a list of game library commands and their arguments to the terminal.
+     */
+    private void printCommands() {
+        IO.println("List of Available Commands");
+        IO.println("Please keep all arguments space separated and case sensitive.");
+        IO.println("Add {Game1 Game2 ...}: Adds listed games to the library");
+        IO.println("Remove {Game1 Game2 ...}: Removes listed games from the library");
+        IO.println("Check {Game1 Game2 ...}: Checks for listed games in the library");
+        IO.println("Find {Game1 Game2 ...}: Finds the index of the listed games in the library");
+        IO.println(
+            "Display opt.{start end}: Displays the library from the start index " + 
+            "to the end index (no additional arguments displays the entire library)."
+        );
+        IO.println(String.format("Save (opt. filepath): Saves the library in the given filepath " +
+            "(no additional argument saves to %s), overwrites the file.", DEFAULT_SAVE_PATH)
+        );
+        IO.println(String.format("Load (opt. filepath): Loads the library from the given filepath " +
+            "(no additional argument loads from %s), overwrites the library.", DEFAULT_SAVE_PATH)
+        );
+        IO.println("Exit: Quit the program.");
+    }
+    
+    /**
+     * Takes space seperated user input from the terminal and returns
+     * each word as an element in a single String array.
+     * 
+     * @return array of Strings of space-separated terminal input
+     */
+    private String[] handleUserInput() {
+        return IO.readln().split(" ");
+    }
+
+    /**
+     * Handles a {@code String[]} of arbitrary length and maps it
+     * to a known command. If the command is not able to be found,
+     * prints "Unknown command." to the terminal.
+     * The first element is the command, and all other elements
+     * are treated as arguments.
+     * 
+     * @param command an array of command arguments 
+     */
+    private void handleCommand(String... command) {
+        // Use the first word as the main command
+        switch (command[0]) {
+            case "Add" -> {
+                if (command.length == 1) {
+                    IO.println("Please specify games to add.");
+                }
+
+                for (int i = 1; i < command.length; i++) {
+                    addGame(command[i]);
+                }
+            }
+            case "Remove" -> {
+                if (command.length == 1) {
+                    IO.println("Please specify games to remove.");
+                }
+                
+                for (int i = 1; i < command.length; i++) {
+                    removeGame(command[i]);
+                }
+            }
+            case "Check" -> {
+                if (command.length == 1) {
+                    IO.println("Please specify games to check for.");
+                }
+
+                for (int i = 1; i < command.length; i++) {
+                    IO.println(
+                        hasDuplicate(command[i]) ? 
+                            String.format("%s found.", command[i]) : String.format("%s not found.", command[i])
+                    );
+                }
+            }
+            case "Find" -> {
+                if (command.length == 1) {
+                    IO.println("Please specify games to find.");
+                }
+
+                int index;
+                for (int i = 1; i < command.length; i++) {
+                    IO.println(
+                        (index = gameIndex(command[i])) != -1 ?
+                            String.format("%s found at index %d.", command[i], index)
+                                : String.format("%s not found.", command[i])
+                    );
+                }
+            }
+            case "Display" -> {
+                switch (command.length) {
+                    case 1 -> displayLibrary();
+                    case 3 -> {
+                        try {
+                            int start = Integer.parseInt(command[1]);
+                            int end = Integer.parseInt(command[2]);
+                            displayLibrary(start, end);
+                        } catch (NumberFormatException e) {
+                            IO.println("Invalid index format, please provide integers.");
+                        }
+                    }
+                    default -> {
+                        IO.println("Unknown command");
+                        printCommands();
+                    }
+                }
+            }
+            case "Save" -> {
+                switch (command.length) {
+                    case 1 -> saveLibrary();
+                    case 2 -> saveLibrary(command[1]);
+                    default -> {
+                        IO.println("Unknown command.");
+                        printCommands();
+                    }
+                }
+            }
+            case "Load" -> {
+                switch (command.length) {
+                    case 1 -> loadLibrary();
+                    case 2 -> loadLibrary(command[1]);
+                    default -> {
+                        IO.println("Unknown command.");
+                        printCommands();
+                    }
+                }
+            }
+            case "Exit" -> {
+                running = false;
+            }
+            default -> {
+                IO.println("Unknown command.");
+                printCommands();
+            }
+        }
     }
 
     @Override 
