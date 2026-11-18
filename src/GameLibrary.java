@@ -262,7 +262,8 @@ public class GameLibrary {
         for (int i = 0; i < library.size(); i++) {
             // Compare both strings in lowercase to ignore case sensitivity.
             if (library.get(i).toLowerCase().equals(gameName.toLowerCase())) {
-                return i;
+                // Return i + 1 as display is 1-indexed
+                return i + 1;
             }
         }
 
