@@ -85,7 +85,7 @@ public class GameLibrary {
      * and the library size inclusive
      * @throws IndexOutOfBoundsException
      */
-    public void displayLibrary(int start, int end) throws IndexOutOfBoundsException {
+    public void displayLibrary(int start, int end) {
         // Check first to prevent throwing an exception on an empty library;
         if (library.isEmpty()) {
             IO.println("Game library is empty.");
@@ -93,15 +93,15 @@ public class GameLibrary {
         }
 
         if (start < 1) {
-            throw new IndexOutOfBoundsException("Library begins at index 1");
+            IO.println("Library begins at index 1");
         }
 
         if (end < start) {
-            throw new IndexOutOfBoundsException("Display cannot end before start");
+            IO.println("Display cannot end before start");
         }
 
         if (start >= library.size() || end > library.size()) {
-            throw new IndexOutOfBoundsException(String.format("Game library has size %d", library.size()));
+            IO.println(String.format("Game library has size %d", library.size()));
         }
 
         // Create a separator on both ends to make output clear.
