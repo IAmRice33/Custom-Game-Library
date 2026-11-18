@@ -96,8 +96,8 @@ public class GameLibrary {
             throw new IndexOutOfBoundsException("Library begins at index 1");
         }
 
-        if (end <= start) {
-            throw new IndexOutOfBoundsException("Display must end at least 1 after start");
+        if (end < start) {
+            throw new IndexOutOfBoundsException("Display cannot end before start");
         }
 
         if (start >= library.size() || end > library.size()) {
@@ -369,6 +369,14 @@ public class GameLibrary {
             case "Display" -> {
                 switch (command.length) {
                     case 1 -> displayLibrary();
+                    case 2 -> {
+                        try {
+                            int index = Integer.parseInt(command[1]);
+                            displayLibrary(index, index);
+                        } catch (NumberFormatException e) {
+                            IO.println("Invalid index format, please provide integers.");
+                        }
+                    }
                     case 3 -> {
                         try {
                             int start = Integer.parseInt(command[1]);
