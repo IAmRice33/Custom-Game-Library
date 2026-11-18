@@ -85,7 +85,7 @@ public class GameLibrary {
      * and the library size inclusive
      * @throws IndexOutOfBoundsException
      */
-    public void displayLibrary(int start, int end) throws IndexOutOfBoundsException {
+    public void displayLibrary(int start, int end) {
         // Check first to prevent throwing an exception on an empty library;
         if (library.isEmpty()) {
             IO.println("Game library is empty.");
@@ -93,15 +93,15 @@ public class GameLibrary {
         }
 
         if (start < 1) {
-            throw new IndexOutOfBoundsException("Library begins at index 1");
+            IO.println("Library begins at index 1");
         }
 
-        if (end <= start) {
-            throw new IndexOutOfBoundsException("Display must end at least 1 after start");
+        if (end < start) {
+            IO.println("Display cannot end before start");
         }
 
         if (start >= library.size() || end > library.size()) {
-            throw new IndexOutOfBoundsException(String.format("Game library has size %d", library.size()));
+            IO.println(String.format("Game library has size %d", library.size()));
         }
 
         // Create a separator on both ends to make output clear.
@@ -262,7 +262,8 @@ public class GameLibrary {
         for (int i = 0; i < library.size(); i++) {
             // Compare both strings in lowercase to ignore case sensitivity.
             if (library.get(i).toLowerCase().equals(gameName.toLowerCase())) {
-                return i;
+                // Return i + 1 as display is 1-indexed
+                return i + 1;
             }
         }
 
@@ -274,7 +275,7 @@ public class GameLibrary {
      */
     private void printCommands() {
         IO.println("List of Available Commands");
-        IO.println("Please keep all arguments space separated and case sensitive.");
+        IO.println("Please keep all arguments separated by a single space and case sensitive.");
         IO.println("Add {Game1 Game2 ...}: Adds listed games to the library");
         IO.println("Remove {Game1 Game2 ...}: Removes listed games from the library");
         IO.println("Check {Game1 Game2 ...}: Checks for listed games in the library");
@@ -312,6 +313,14 @@ public class GameLibrary {
      * @param command an array of command arguments 
      */
     private void handleCommand(String... command) {
+        // Prevent inconsistent functionality due to multiple consecutive spaces
+        for (String argument : command) {
+            if (argument.equals("")) {
+                IO.println("Please keep spacing between arguments to one space");
+                return;
+            }
+        }
+
         // Use the first word as the main command
         switch (command[0]) {
             case "Add" -> {
@@ -361,6 +370,14 @@ public class GameLibrary {
             case "Display" -> {
                 switch (command.length) {
                     case 1 -> displayLibrary();
+                    case 2 -> {
+                        try {
+                            int index = Integer.parseInt(command[1]);
+                            displayLibrary(index, index);
+                        } catch (NumberFormatException e) {
+                            IO.println("Invalid index format, please provide integers.");
+                        }
+                    }
                     case 3 -> {
                         try {
                             int start = Integer.parseInt(command[1]);
