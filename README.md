@@ -8,12 +8,12 @@ I play games quite often and have a lot of games that I have played in the past 
 but because I switch games often, I can easily forget some of these games and never get back to them. I want to 
 create a game library that can help me track these games and remind me of games I may have forgotten and want to revisit.
 
-## How It Will Work (MVP)
+## How It Works (MVP)
 
 - [x] Add and remove games from the library
 - [x] Display all games in the library
 - [x] Save and load the game library from a `.txt` file
-- [ ] Implement dynamic user input to control program execution
+- [x] Implement dynamic user input to control program execution
 
 ![System Diagram](docs/Custom%20Game%20Library%20System%20Diagram.drawio.png)
 
@@ -25,9 +25,13 @@ create a game library that can help me track these games and remind me of games 
   - java.io.BufferedReader
   - java.io.FileReader
   - java.io.PrintWriter
+  - java.io.FileNotFoundException
   - java.io.IOException
   - java.lang.IO
-  - java.nio.file
+  - java.nio.file.FileAlreadyExistsException
+  - java.nio.file.Files
+  - java.nio.file.InvalidPathException
+  - java.nio.file.Path
 - **Data Storage:** `.txt`
 
 ## Roadmap
