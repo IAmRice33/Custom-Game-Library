@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * 
@@ -17,13 +18,13 @@ import java.util.ArrayList;
  * 
  * @author Kyle Yang
  * 
- * @version v1.0.0
+ * @version v1.1.0
  * 
  * @since 1.0
  */
 public class GameLibrary {
     // Use ArrayList<String> to dynamically store games.
-    private final ArrayList<String> library;
+    private final ArrayList<Game> library;
     // This is the default path to save the data to.
     private static final String DEFAULT_SAVE_PATH = "/data/GameLibrary.txt";
     private boolean running;
@@ -35,45 +36,44 @@ public class GameLibrary {
 
     /**
      * Adds a game to the library.
-     * Prevents duplicate names and prints result to terminal.
+     * Prevents duplicate games and prints result to terminal.
      * Rejects null values.
      * 
-     * @param gameName the game to add
+     * @param game the game to add
      */
-    private void addGame(String gameName) {
-        if (gameName == null) {
-            IO.println("Game name provided to add is null.");
+    private void addGame(Game game) {
+        if (game == null) {
+            IO.println("Game provided to add is null.");
             return;
         }
 
-        if (hasDuplicate(gameName)) {
-            IO.println(String.format("Failed to add %s: Game already exists.", gameName));
+        if (hasDuplicate(game)) {
+            IO.println(String.format("Failed to add %s: Game already exists.", game));
         } else {
-            library.add(gameName);
-            IO.println(String.format("Successfully added %s.", gameName));
+            library.add(game);
+            IO.println(String.format("Successfully added %s.", game));
         }
     }
 
     /**
-     * Removes the game from the library matching the requested case insensitive name.
+     * Removes the game from the library matching the requested game.
      * Prints the result to the terminal and null values are rejected.
      * 
-     * @param gameName the game to remove
+     * @param game the game to remove
      */
-    private void removeGame(String gameName) {
-        if (gameName == null) {
-            IO.println("Game name provided for removal is null.");
+    private void removeGame(Game game) {
+        if (game == null) {
+            IO.println("Game provided for removal is null.");
             return;
         }
 
-        int index = gameIndex(gameName);
+        int index = gameIndex(game);
 
-        // Use index instead of passing the exact string to make removal case insensitive.
         if (index != -1) {
-            library.remove(index);
-            IO.println(String.format("Successfully removed %s from the library.", gameName));
+            library.remove(index - 1);
+            IO.println(String.format("Successfully removed %s from the library.", game));
         } else {
-            IO.println(String.format("%s was not found in the library.", gameName));
+            IO.println(String.format("%s was not found in the library.", game));
         }
     }
 
@@ -110,7 +110,7 @@ public class GameLibrary {
         // Format a title at the top, and use left and right justified widths to ensure spacing.
         IO.println(String.format("%-20s%s%20s", "-".repeat(19), "Game Library", "-".repeat(19)));
 
-        // Print each game name on a new line and number it based on position in library.
+        // Print each game on a new line and number it based on position in library.
         // Use 1-index to align user input of start and end with the displayed numbers
         // next to the games. Start at start - 1 as number printed is i + 1.
         for (int i = start - 1; i < end; i++) {
@@ -167,7 +167,7 @@ public class GameLibrary {
         }
 
         try (PrintWriter writer = new PrintWriter("../" + filePath)) {
-            for (String game : library) {
+            for (Game game : library) {
                 writer.println(game);
             }
             writer.flush();
@@ -197,9 +197,10 @@ public class GameLibrary {
         // Empty the library to keep game libraries unique.
         library.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader("../" + filePath))) {
-            String game;
-            while ((game = reader.readLine()) != null) {
+            String gameString;
+            while ((gameString = reader.readLine()) != null) {
                 // Use addGame to uphold the game library's rules.
+                Game game = parseGame(gameString);
                 addGame(game);
             }
             IO.println("Load Complete.");
@@ -232,18 +233,16 @@ public class GameLibrary {
     }
 
     /**
-     * Checks if the requested case insensitive game name already exists 
-     * in the game library.
-     * Duplicate names are checked to prevent accidental replicating of names when 
-     * the game library becomes large, and games with identical names are rare.
+     * Checks if the requested game already exists in the game library.
+     * Duplicate games are checked to prevent accidental replicating of games when 
+     * the game library becomes large.
      * 
-     * @param gameName the game to check for
-     * @return true if the game exists in library, case insensitive, false otherwise
+     * @param game the game to check for
+     * @return true if the game exists in library, false otherwise
      */
-    private boolean hasDuplicate(String gameName) {
-        for (String game : library) {
-            // Compare both strings in lowercase to ignore case sensitivity.
-            if (game.toLowerCase().equals(gameName.toLowerCase())) {
+    private boolean hasDuplicate(Game game) {
+        for (Game libraryGame : library) {
+            if (libraryGame.equals(game)) {
                 return true;
             }
         }
@@ -251,25 +250,40 @@ public class GameLibrary {
     }
 
     /**
-     * Returns the index of the first occurance of the requested game name
+     * Returns the index of the first occurance of the requested game
      * in the game library, or -1 if there is no such game.
-     * Comparisons between library games and the requested name are case
-     * insensitive.
      *  
-     * @param gameName the game to find
+     * @param game the game to find
      * @return the index of the first occurance of requested game, or -1
      * if the game is not in the library
      */
-    private int gameIndex(String gameName) {
+    private int gameIndex(Game game) {
         for (int i = 0; i < library.size(); i++) {
             // Compare both strings in lowercase to ignore case sensitivity.
-            if (library.get(i).toLowerCase().equals(gameName.toLowerCase())) {
+            if (library.get(i).equals(game)) {
                 // Return i + 1 as display is 1-indexed
                 return i + 1;
             }
         }
 
         return -1;
+    }
+
+    /**
+     * Parses a given {@code String} and returns a new Game object.
+     * 
+     * @param gameString the {@code String} to be parsed
+     * @return a new Game object
+     * 
+     * @since 1.1
+     */
+    private Game parseGame(String gameString) {
+        String[] separatedString = gameString.split(",");
+        if (separatedString.length > 1) {
+            return new Game(separatedString[0], Arrays.copyOfRange(separatedString, 1, separatedString.length));
+        }
+
+        return new Game(separatedString[0]);
     }
     
     /**
@@ -278,6 +292,7 @@ public class GameLibrary {
     private void printCommands() {
         IO.println("List of Available Commands");
         IO.println("Please keep all arguments separated by a single space and case sensitive.");
+        IO.println("Games are written in the format: name,tag1,tag2,tag3,...");
         IO.println("Add {Game1 Game2 ...}: Adds listed games to the library");
         IO.println("Remove {Game1 Game2 ...}: Removes listed games from the library");
         IO.println("Check {Game1 Game2 ...}: Checks for listed games in the library");
@@ -331,7 +346,7 @@ public class GameLibrary {
                 }
 
                 for (int i = 1; i < command.length; i++) {
-                    addGame(command[i]);
+                    addGame(parseGame(command[i]));
                 }
             }
             case "Remove" -> {
@@ -340,7 +355,7 @@ public class GameLibrary {
                 }
                 
                 for (int i = 1; i < command.length; i++) {
-                    removeGame(command[i]);
+                    removeGame(parseGame(command[i]));
                 }
             }
             case "Check" -> {
@@ -350,7 +365,7 @@ public class GameLibrary {
 
                 for (int i = 1; i < command.length; i++) {
                     IO.println(
-                        hasDuplicate(command[i]) ? 
+                        hasDuplicate(parseGame(command[i])) ? 
                             String.format("%s found.", command[i]) : String.format("%s not found.", command[i])
                     );
                 }
@@ -363,7 +378,7 @@ public class GameLibrary {
                 int index;
                 for (int i = 1; i < command.length; i++) {
                     IO.println(
-                        (index = gameIndex(command[i])) != -1 ?
+                        (index = gameIndex(parseGame(command[i]))) != -1 ?
                             String.format("%s found at index %d.", command[i], index)
                                 : String.format("%s not found.", command[i])
                     );
@@ -429,8 +444,8 @@ public class GameLibrary {
     public String toString() {
         String gameList = "";
 
-        for (String gameName : library) {
-            gameList += gameName + " ";
+        for (Game game : library) {
+            gameList += game + " ";
         }
 
         return gameList;

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * 
@@ -9,6 +10,10 @@ import java.util.Collections;
  * and its tags.
  * 
  * @author Kyle Yang
+ * 
+ * @version v1.1.0
+ * 
+ * @since 1.1
  */
 public class Game {
     private String name;
@@ -38,6 +43,13 @@ public class Game {
         return tags;
     }
 
+    @Override 
+    public boolean equals(Object o) {
+        return o instanceof Game g
+            && name.equals(g.name)
+            && tags.equals(g.tags);
+    }
+
     @Override
     public String toString() {
         String str = "";
@@ -47,5 +59,13 @@ public class Game {
         }
 
         return str;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + Objects.hashCode(this.name);
+        hash = 67 * hash + Objects.hashCode(this.tags);
+        return hash;
     }
 }
