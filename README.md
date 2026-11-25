@@ -37,9 +37,9 @@ create a game library that can help me track these games and remind me of games 
 ## Roadmap
 
 **Create a specialized game class**
-- [ ] Create a game object for future support
-- [ ] Add multiple games at once
-- [ ] Game/Genre tags
+- [x] Create a game object for future support
+- [x] Add multiple games at once
+- [x] Game/Genre tags
 - [ ] Status tags
 - [ ] Hours played
 - [ ] Have last played time
