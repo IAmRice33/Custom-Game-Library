@@ -117,7 +117,22 @@ public class GameLibrary {
         // Use 1-index to align user input of start and end with the displayed numbers
         // next to the games. Start at start - 1 as number printed is i + 1.
         for (int i = start - 1; i < end; i++) {
-            IO.println(String.format("%d. %s", (i + 1), library.get(i)));
+            Game game = library.get(i);
+            String toPrint = game.getName();
+            ArrayList<String> tags = game.getTags();
+
+            // Separate tags if they exist
+            if (!tags.isEmpty()) {
+                toPrint += " | Tags: ";
+            }
+
+            for (int j = 0; j < tags.size(); j++) {
+                toPrint += tags.get(j);
+                if (j != tags.size() - 1) {
+                    toPrint += ", ";
+                }
+            } 
+            IO.println(String.format("%d. %s", (i + 1), toPrint));
         }
 
         // Bottom separator
