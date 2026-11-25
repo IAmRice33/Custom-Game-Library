@@ -17,6 +17,8 @@ import java.util.ArrayList;
  * 
  * @author Kyle Yang
  * 
+ * @version v1.0.0
+ * 
  * @since 1.0
  */
 public class GameLibrary {
@@ -38,7 +40,7 @@ public class GameLibrary {
      * 
      * @param gameName the game to add
      */
-    public void addGame(String gameName) {
+    private void addGame(String gameName) {
         if (gameName == null) {
             IO.println("Game name provided to add is null.");
             return;
@@ -58,7 +60,7 @@ public class GameLibrary {
      * 
      * @param gameName the game to remove
      */
-    public void removeGame(String gameName) {
+    private void removeGame(String gameName) {
         if (gameName == null) {
             IO.println("Game name provided for removal is null.");
             return;
@@ -85,7 +87,7 @@ public class GameLibrary {
      * and the library size inclusive
      * @throws IndexOutOfBoundsException
      */
-    public void displayLibrary(int start, int end) {
+    private void displayLibrary(int start, int end) {
         // Check first to prevent throwing an exception on an empty library;
         if (library.isEmpty()) {
             IO.println("Game library is empty.");
@@ -124,7 +126,7 @@ public class GameLibrary {
      * 
      * @see #displayLibrary(int, int)
      */
-    public void displayLibrary() {
+    private void displayLibrary() {
         displayLibrary(1, library.size());
     }
 
@@ -134,7 +136,7 @@ public class GameLibrary {
      * 
      * @param filePath the file path to save the game library's data at
      */
-    public void saveLibrary(String filePath) {
+    private void saveLibrary(String filePath) {
         // Create a new file using the path from the project root rather than src.
         // Use relative paths to keep the project portable.
         Path path;
@@ -181,7 +183,7 @@ public class GameLibrary {
      * 
      * @see #saveLibrary(String)
      */
-    public void saveLibrary() {
+    private void saveLibrary() {
         saveLibrary(DEFAULT_SAVE_PATH);
     }
 
@@ -191,7 +193,7 @@ public class GameLibrary {
      * 
      * @param filePath the file path to load data from
      */
-    public void loadLibrary(String filePath) {
+    private void loadLibrary(String filePath) {
         // Empty the library to keep game libraries unique.
         library.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader("../" + filePath))) {
@@ -212,7 +214,7 @@ public class GameLibrary {
      * 
      * @see #loadLibrary(String)
      */
-    public void loadLibrary() {
+    private void loadLibrary() {
         loadLibrary(DEFAULT_SAVE_PATH);
     }
 
