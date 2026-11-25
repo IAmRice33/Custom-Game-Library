@@ -96,14 +96,17 @@ public class GameLibrary {
 
         if (start < 1) {
             IO.println("Library begins at index 1");
+            return;
         }
 
         if (end < start) {
             IO.println("Display cannot end before start");
+            return;
         }
 
         if (start >= library.size() || end > library.size()) {
             IO.println(String.format("Game library has size %d", library.size()));
+            return;
         }
 
         // Create a separator on both ends to make output clear.
@@ -270,6 +273,27 @@ public class GameLibrary {
     }
 
     /**
+     * Gets the name of the game in the library at 
+     * the requested index.
+     * 
+     * @param index the index to get
+     * @return the name of the game at the index
+     */
+    private String getName(int index) {
+        if (index < 1) {
+            IO.println("Library begins at index 1");
+            return null;
+        }
+
+        if (index > library.size()) {
+            IO.println("Library ends at index " + library.size());
+            return null;
+        }
+
+        return library.get(index - 1).getName();
+    }
+
+    /**
      * Parses a given {@code String} and returns a new Game object.
      * 
      * @param gameString the {@code String} to be parsed
@@ -295,6 +319,7 @@ public class GameLibrary {
         IO.println("Games are written in the format: name,tag1,tag2,tag3,...");
         IO.println("Add {Game1 Game2 ...}: Adds listed games to the library");
         IO.println("Remove {Game1 Game2 ...}: Removes listed games from the library");
+        IO.println("Name {index}: Gets the name of the game at the index");
         IO.println("Check {Game1 Game2 ...}: Checks for listed games in the library");
         IO.println("Find {Game1 Game2 ...}: Finds the index of the listed games in the library");
         IO.println(
@@ -356,6 +381,25 @@ public class GameLibrary {
                 
                 for (int i = 1; i < command.length; i++) {
                     removeGame(parseGame(command[i]));
+                }
+            }
+            case "Name" -> {
+                if (command.length == 1) {
+                    IO.println("Please give an index to check.");
+                    break;
+                }
+                if (command.length > 2) {
+                    IO.println("Only one index can be checked at once");
+                    break;
+                }
+                try {
+                    String name = getName(Integer.parseInt(command[1]));
+                    if (name == null) {
+                        break;
+                    }
+                    IO.println(name);
+                } catch (NumberFormatException e) {
+                    IO.println("Please give a valid integer index");
                 }
             }
             case "Check" -> {
