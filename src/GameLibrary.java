@@ -294,6 +294,27 @@ public class GameLibrary {
     }
 
     /**
+     * Gets the tags of the game in the library at 
+     * the requested index.
+     * 
+     * @param index the index to get
+     * @return the tags of the game at the index
+     */
+    private ArrayList<String> getTags(int index) {
+        if (index < 1) {
+            IO.println("Library begins at index 1");
+            return null;
+        }
+
+        if (index > library.size()) {
+            IO.println("Library ends at index " + library.size());
+            return null;
+        }
+
+        return library.get(index - 1).getTags();
+    }
+
+    /**
      * Parses a given {@code String} and returns a new Game object.
      * 
      * @param gameString the {@code String} to be parsed
@@ -320,6 +341,7 @@ public class GameLibrary {
         IO.println("Add {Game1 Game2 ...}: Adds listed games to the library");
         IO.println("Remove {Game1 Game2 ...}: Removes listed games from the library");
         IO.println("Name {index}: Gets the name of the game at the index");
+        IO.println("Tags {index}: Gets the tags of the game at the index");
         IO.println("Check {Game1 Game2 ...}: Checks for listed games in the library");
         IO.println("Find {Game1 Game2 ...}: Finds the index of the listed games in the library");
         IO.println(
@@ -398,6 +420,33 @@ public class GameLibrary {
                         break;
                     }
                     IO.println(name);
+                } catch (NumberFormatException e) {
+                    IO.println("Please give a valid integer index");
+                }
+            }
+            case "Tags" -> {
+                if (command.length == 1) {
+                    IO.println("Please give an index to check.");
+                    break;
+                }
+                if (command.length > 2) {
+                    IO.println("Only one index can be checked at once");
+                    break;
+                }
+                try {
+                    ArrayList<String> tags = getTags(Integer.parseInt(command[1]));
+                    if (tags.isEmpty()) {
+                        IO.println("No tags");
+                        break;
+                    }
+                    String toPrint = "";
+                    for (int i = 0; i < tags.size(); i++) {
+                        toPrint += tags.get(i);
+                        if (i != tags.size() - 1) {
+                            toPrint += ", ";
+                        }
+                    }
+                    IO.println(toPrint);
                 } catch (NumberFormatException e) {
                     IO.println("Please give a valid integer index");
                 }
