@@ -18,7 +18,7 @@ import java.util.Arrays;
  * 
  * @author Kyle Yang
  * 
- * @version v1.1.0
+ * @version v1.2.0
  * 
  * @since 1.0
  */
@@ -293,6 +293,8 @@ public class GameLibrary {
      * 
      * @param index the index to get
      * @return the name of the game at the index
+     * 
+     * @since 1.2
      */
     private String getName(int index) {
         if (index < 1) {
@@ -314,6 +316,8 @@ public class GameLibrary {
      * 
      * @param index the index to get
      * @return the tags of the game at the index
+     * 
+     * @since 1.2
      */
     private ArrayList<String> getTags(int index) {
         if (index < 1) {
