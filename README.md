@@ -1,6 +1,6 @@
 # Custom-Game-Library
 
-A Java program made to manage a game library using user input as commands and store the library in a `.txt` file.
+A Java program made to manage a game library using user input as commands and store the library in a plain text file.
 
 ## Project Goal
 
@@ -12,8 +12,8 @@ create a game library that can help me track these games and remind me of games 
 
 - [x] Add and remove games from the library
 - [x] Display all games in the library
-- [x] Save and load the game library from a `.txt` file
-- [x] Implement dynamic user input to control program execution
+- [x] Save and load the game library from a text file
+- [x] Use dynamic user input to control program execution
 
 ![System Diagram](docs/Custom%20Game%20Library%20System%20Diagram.drawio.png)
 
@@ -32,7 +32,45 @@ create a game library that can help me track these games and remind me of games 
   - java.nio.file.Files
   - java.nio.file.InvalidPathException
   - java.nio.file.Path
-- **Data Storage:** `.txt`
+- **Data Storage:** Plain text file
+
+## Setup
+
+**Requirements:**
+- JDK 25+ (found [here](https://www.oracle.com/java/technologies/downloads/))
+
+**Optional:**
+- IDE with Java support (Ex. [IntelliJ IDEA](https://www.jetbrains.com/idea/))
+
+**Process**
+1. Clone the repository
+
+    Using Git:
+    ```bash
+    git clone https://github.com/IAmRice33/Custom-Game-Library
+    cd Custom-Game-Library
+    ```
+    OR
+    Use GitHub desktop to clone the repository
+
+2. Running the program
+    1. Through terminal
+       - Compile all .java files in src
+       ```bash
+       javac ./src/*.java
+       ```
+       Or if you want a separate folder
+       ```bash
+       javac -d ./folder-name/ ./src/*.java
+       ```
+       - Run the compiled Java program (`src` can be replaced by your custom folder)
+       ```bash
+       java -cp ./src/ Main
+       ```
+    2. Using an IDE
+       - Open the repository in your chosen IDE
+       - Either use above terminal commands in the built in IDE terminal
+       - Or run using your IDE's run button
 
 ## Roadmap
 
