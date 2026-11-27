@@ -277,7 +277,6 @@ public class GameLibrary {
      */
     private int gameIndex(Game game) {
         for (int i = 0; i < library.size(); i++) {
-            // Compare both strings in lowercase to ignore case sensitivity.
             if (library.get(i).equals(game)) {
                 // Return i + 1 as display is 1-indexed
                 return i + 1;
