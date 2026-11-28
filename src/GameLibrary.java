@@ -104,7 +104,7 @@ public class GameLibrary {
             return;
         }
 
-        if (start >= library.size() || end > library.size()) {
+        if (start > library.size() || end > library.size()) {
             IO.println(String.format("Game library has size %d", library.size()));
             return;
         }
